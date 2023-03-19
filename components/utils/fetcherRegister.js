@@ -1,4 +1,4 @@
-export default async function fetchRegister(data) {
+export default async function FetchRegister(data) {
     const response = await fetch("https://reqres.in/api/register", {
         method:"POST",
         headers: {

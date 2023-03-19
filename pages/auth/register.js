@@ -1,10 +1,11 @@
+import FetchRegister from "@/components/utils/fetcherRegister"
 import { useMutation } from "@tanstack/react-query"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import Auth from "."
 
 export default function Register() {
-  const {status, data, error, mutate} = useMutation(fetchRegister)
+  const {status, data, error, mutate} = useMutation(FetchRegister)
   const router = useRouter()
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -19,7 +20,7 @@ export default function Register() {
   if (status === "loading") return <h1>loading...</h1>
   if (status === "error") console.log(error.massage)
   if (status === "success") { 
-    sessionStorage.setItem('token', data.token);
+    document.cookie = `token = ${data.token}`
     sessionStorage.setItem('id', data.id);
     router.push("/")
 }

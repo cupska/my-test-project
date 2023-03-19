@@ -1,58 +1,32 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import FetcherUsers from '@/components/utils/fetcherUsers';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import CardUser from '@/components/ui/cardUser';
-import Link from 'next/link';
+import Navbar from '@/components/ui/navbar';
+import { useEffect, useState } from 'react';
 const inter = Inter({ subsets: ['latin'] })
 
-// export default function ExampleComponent() {
-//   const PAGE_LIMIT = 3;
-
-//   const fetchItems = async (key, page = 1) => {
-//     const res = await fetch(`https://reqres.in/api/users?page=${page}`);
-//     const data = await res.json();
-//     return data;
-//   };
-
-//   const { data, isFetching, isPreviousData, fetchMore } = useQuery(['items', 1],fetchItems,
-//     {
-//       keepPreviousData: true,
-//       staleTime: 0,
-//     }
-//   );
-
-//   if (!data) {
-//     return <div>Loading...</div>;
-//   }
-
-//   const handleLoadMore = () => {
-//     if (!isFetching && !isPreviousData && data.length === PAGE_LIMIT) {
-//       fetchMore(prevPage => prevPage + 1);
-//     }
-//   };
-//   console.log(data)
-//   return (
-//     <div>
-//       {data.data.map(item => (
-//         <li key={item.id}>
-//           <h1>{item.email}</h1>
-//         </li>
-//       ))}
-//       <button onClick={handleLoadMore}>Load more</button>
-//     </div>
-//   );
-// }
-
-
+ 
 export default function Home() {
   const { isLoading, error, data} = useQuery(['users'], FetcherUsers);
+  const [dataPerPage, setDataPerPage] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [from, setFrom] = useState(0)
+  const [to, setTo] = useState(4)
 
   if (error) return <div>Error: {error.message}</div>;
-  console.log(data)
 
+  useEffect(() => {
+    if (data) {
+      const sliced = data.slice(from, to)
+      setDataPerPage(sliced)
+      // console.log(sliced)
+    }
+  },[data, from])
+
+  console.log(from , to)
+  // console.log(data.length)
   return (
     <>
       <Head>
@@ -62,31 +36,49 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className=' flex justify-center' > 
-          <ul className=' w-fit grid grid-cols-2 grid-rows-2 gap-10'>
+        <Navbar/>
+        <div className=' sm:h-screen flex flex-col justify-center items-center' > 
+          <ul className=' w-fit max-sm:mt-20 max-sm:mb-10 grid sm:grid-cols-2 grid-cols-1 gap-10'>
             {isLoading ? "Loading..." : ""}
-            {data ? data.data.map(user => 
-              <li key={user.id}>
-                <Link href={`/users/${user.id}`}>
-                  <CardUser data={user} />
-                </Link>
+            {dataPerPage ? dataPerPage.map(user => {
+              return (
+                <li className=' relative' key={user.id}>
+                    <CardUser data={user} />
               </li>
-          ) :
-            ""}
+            )}
+            ) : ""}
           </ul>
+          <div className=' [&>*]:px-3 sm:mt-10 max-sm:mb-20 flex justify-center border divide-x'>
+              <button className=' ' onClick={async () => {
+                const w = await data.length
+                if (from > 0) {
+                  setFrom(from - 4)
+                  setTo(to - 4)
+                  setCurrentPage(currentPage - 1)
+                }
+                }}>
+                  Prev
+              </button>
+
+              <span className=''>{currentPage}</span>
+
+              <button className=' ' onClick={async () => {
+                const w = await data.length
+                console.log(typeof w)
+                if (to < w) {
+                  setFrom(from + 4)
+                  setTo(to + 4)
+                  setCurrentPage(currentPage + 1)
+                }
+              }}>
+                  Next
+              </button>
+            </div>
+         
+            
         </div>
       </main>
 
-
-
-      {/* <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              /> */}
     </>
   )
 }

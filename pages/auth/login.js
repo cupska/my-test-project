@@ -18,17 +18,18 @@ export default function Login() {
         mutate(data)
     }
 
-    if (status === "loading") return <h1>Locading....</h1>
-    if (status === "error") console.log(error.massage)
-    if (status === "success") { 
-            sessionStorage.setItem('token', data.token);
-            router.push("/")
+    if (status === "loading") return <h1>Loading....</h1>
+    if (status === "error") console.log(error)
+    if (status === "success") {
+        // document.cookie = `token = ${data.token}`
+        window.localStorage.setItem('token', `${data.token}`)
+        router.push("/")
     }
 
     return (
         <Auth>
             <h1 className=" text-center">Login</h1>
-            <form className=" w-[25rem] flex flex-col gap-2" onSubmit={(e) => handleSubmit(e)}>
+            <form className=" w-[100%] md:w-[25rem] flex flex-col gap-2" onSubmit={(e) => handleSubmit(e)}>
                 <label htmlFor="email">Email:</label>
                 <input className=" input-field" type="email" id="email" value="eve.holt@reqres.in" readOnly name="email"/>
 
