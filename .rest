@@ -1,0 +1,9 @@
+# GET https://reqres.in/api/users/179 HTTP/1.1
+
+POST https://reqres.in/api/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "eve.holt@reqres.in",
+    "password": "pistol"
+}
