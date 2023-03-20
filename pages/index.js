@@ -15,6 +15,11 @@ export default function Home() {
   const [from, setFrom] = useState(0)
   const [to, setTo] = useState(4)
 
+  useEffect(() => {
+    sliceData()
+    console.log('update')
+  },[data, from, to])
+
   if (error) return <div>Error: {error.message}</div>
 
   const sliceData = () => {
@@ -24,10 +29,6 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {
-    sliceData()
-    console.log('update')
-  },[data, from, to])
   console.log(from , to)
   // console.log(data.length)
   return (
