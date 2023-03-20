@@ -1,3 +1,4 @@
+import LoveIcon from "./icon/love"
 
 export default function LikeBtn(props) {
 

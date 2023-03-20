@@ -15,16 +15,19 @@ export default function Home() {
   const [from, setFrom] = useState(0)
   const [to, setTo] = useState(4)
 
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <div>Error: {error.message}</div>
+
+  const sliceData = () => {
+    if (data) {
+      setDataPerPage(data.slice(from, to))
+      console.log('sliced data')
+    }
+  }
 
   useEffect(() => {
-    if (data) {
-      const sliced = data.slice(from, to)
-      setDataPerPage(sliced)
-      // console.log(sliced)
-    }
-  },[data, from])
-
+    sliceData()
+    console.log('update')
+  },[data, from, to])
   console.log(from , to)
   // console.log(data.length)
   return (
